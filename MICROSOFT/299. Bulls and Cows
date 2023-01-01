@@ -1,0 +1,41 @@
+Link: https://leetcode.com/problems/bulls-and-cows/
+
+class Solution {
+    public String getHint(String secret, String guess) {
+        // Initialize variables to store the number of bulls and cows
+        int bulls = 0;
+        int cows = 0;
+        
+        // Create an array to store the counts of each digit in secret and guess
+        int[] secretCounts = new int[10];
+        int[] guessCounts = new int[10];
+        
+        // Iterate through the secret and guess strings
+        for (int i = 0; i < secret.length(); i++) {
+            char secretChar = secret.charAt(i);
+            char guessChar = guess.charAt(i);
+            
+            // If the characters at this index are the same, increment the bulls count
+            if (secretChar == guessChar) {
+                bulls++;
+            } 
+            // If the characters are different, increment the count for each character in the corresponding array
+            else {
+                secretCounts[secretChar - '0']++;
+                guessCounts[guessChar - '0']++;
+            }
+        }
+        
+        // Iterate through the elements in secretCounts and guessCounts
+        for (int i = 0; i < 10; i++) {
+            // Add the minimum count of each digit to the cows count
+            cows += Math.min(secretCounts[i], guessCounts[i]);
+        }
+        
+        // Return the hint in the format "xAyB"
+        return bulls + "A" + cows + "B";
+    }
+}
+
+Time complexity : O(n)
+space Complexity : O(n)
