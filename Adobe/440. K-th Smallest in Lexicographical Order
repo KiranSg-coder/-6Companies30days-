@@ -1,0 +1,32 @@
+Link : https://leetcode.com/problems/k-th-smallest-in-lexicographical-order/
+
+class Solution {
+    public int findKthNumber(int n, int k) {
+        int currentNumber = 1;  //current number
+        k = k - 1;  //decrement k to start counting from 0
+        while (k > 0) {
+            int steps = countSteps(n, currentNumber, currentNumber + 1); //count the number of steps between two numbers
+            if (steps <= k) {
+                currentNumber += 1;
+                k -= steps;
+            } else {
+                currentNumber *= 10;
+                k -= 1;
+            }
+        }
+        return currentNumber;
+    }
+    //count the number of steps between two numbers using recursion
+    public int countSteps(int n, long currentNumber, long nextNumber) {
+        int steps = 0;
+        while (currentNumber <= n) {
+            steps += Math.min(n + 1, nextNumber) - currentNumber;
+            currentNumber *= 10;
+            nextNumber *= 10;
+        }
+        return steps;
+    }
+}
+
+Time complexity : O(log n * log n)
+Space complexity : O(1)
