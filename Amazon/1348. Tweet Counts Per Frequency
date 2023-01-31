@@ -1,0 +1,39 @@
+import java.util.*;
+import java.util.stream.Collectors;
+
+class TweetCounts {
+
+  Map<String, TreeMap<Integer, Integer>> map;
+
+  public TweetCounts() {
+    map = new HashMap<>();
+  }
+
+  public void recordTweet(String tweetName, int time) {
+    TreeMap<Integer, Integer> treeMap = map.computeIfAbsent(tweetName, (x) -> new TreeMap<>());
+    treeMap.put(time, 1 + treeMap.getOrDefault(time, 0));
+  }
+
+  public List<Integer> getTweetCountsPerFrequency(String freq, String tweetName, int startTime, int endTime) {
+    int interval;
+    switch (freq) {
+      case "minute":
+        interval = 60;
+        break;
+      case "hour":
+        interval = 60 * 60;
+        break;
+      case "day":
+        // pass through
+      default:
+        interval = 60 * 60 * 24;
+    }
+    int[] arr = new int[(endTime - startTime) / interval + 1];
+    TreeMap<Integer, Integer> treeMap = map.get(tweetName);
+    treeMap.subMap(startTime, true, endTime, true)
+        .forEach((k, v) -> {
+          arr[(k - startTime) / interval] += v;
+        });
+    return Arrays.stream(arr).boxed().collect(Collectors.toList());
+  }
+}
